@@ -478,6 +478,9 @@ HTML_TEMPLATE = """
                                 <span id="res-latency" style="font-weight: 600; color: var(--success);">--</span>
                             </div>
                         </div>
+                        <button class="btn-primary" style="margin-top: 1.5rem; background: rgba(255,255,255,0.05); font-size: 0.9rem;" onclick="window.print()">
+                            📥 DOWNLOAD SECURITY AUDIT
+                        </button>
                     </div>
                 </div>
             </div>
@@ -485,8 +488,12 @@ HTML_TEMPLATE = """
 
         <section class="trust-section">
             <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 1rem;">Architected for Trust.</h2>
-            <p style="color: var(--text-muted);">Why industry leaders choose ScamGuard for their workforce safety.</p>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Why industry leaders choose ScamGuard for their workforce safety.</p>
             
+            <button class="badge" style="cursor: pointer; animation: none;" onclick="document.getElementById('tech-modal').style.display='flex'">
+                View System Architecture ↗
+            </button>
+
             <div class="trust-grid">
                 <div class="trust-item">
                     <span class="trust-icon">🧠</span>
@@ -507,19 +514,41 @@ HTML_TEMPLATE = """
         </section>
     </div>
 
+    <!-- Technical Modal -->
+    <div id="tech-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 2rem;">
+        <div class="glass-card" style="max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="font-family: 'Space Grotesk';">System Architecture & ML Pipeline</h2>
+                <button onclick="document.getElementById('tech-modal').style.display='none'" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">✕</button>
+            </div>
+            <div style="color: var(--text-muted); line-height: 1.6;">
+                <h4 style="color: white; margin-bottom: 0.5rem;">1. Hybrid Feature Extraction</h4>
+                <p style="margin-bottom: 1.5rem;">The system utilizes a <b>FeatureUnion</b> pipeline combining high-dimensional TF-IDF vectors (n-grams 1-3) with a custom <b>Heuristic Fraud Engine</b> that monitors for 15+ behavioral trigger patterns.</p>
+                
+                <h4 style="color: white; margin-bottom: 0.5rem;">2. Ensemble Classifier</h4>
+                <p style="margin-bottom: 1.5rem;">A <b>Random Forest Ensemble</b> with 300+ decision trees processes the fused feature matrix. We use <i>balanced_subsample</i> weighting to counteract the heavy class imbalance typical in fraud datasets.</p>
+                
+                <h4 style="color: white; margin-bottom: 0.5rem;">3. Lexical Density Analysis</h4>
+                <p style="margin-bottom: 1.5rem;">Real-time calculation of unique-to-total word ratios to detect repetitive spam patterns and low-quality automation artifacts.</p>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; font-family: monospace; font-size: 0.85rem;">
+                    // Internal Model Signature<br>
+                    Pipeline(steps=[<br>
+                    &nbsp;&nbsp;('features', FeatureUnion(tfidf, fraud_flags)),<br>
+                    &nbsp;&nbsp;('clf', RandomForestClassifier(n_estimators=300, class_weight='balanced'))<br>
+                    ])
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="scan-overlay" id="scan-overlay">
         <div style="width: 400px; height: 500px; border: 2px solid var(--accent); position: relative; overflow: hidden; background: rgba(0,0,0,0.5);">
             <div class="scan-line"></div>
-            <div style="padding: 2rem; font-family: 'Space Grotesk'; font-size: 0.8rem; color: var(--accent); opacity: 0.6;">
-                > INITIALIZING SCAN...<br>
-                > PARSING LINGUISTIC VECTORS...<br>
-                > ANALYZING BEHAVIORAL PATTERNS...<br>
-                > CROSS-REFERENCING SCAM DATABASES...<br>
-                > CALCULATING PROBABILITY...<br>
-                > DECRYPTING METADATA...
+            <div style="padding: 2rem; font-family: 'Space Grotesk'; font-size: 0.8rem; color: var(--accent); opacity: 0.6;" id="terminal-text">
             </div>
         </div>
-        <div class="scanning-text">Analyzing Job DNA...</div>
+        <div class="scanning-text" id="status-text">Analyzing Job DNA...</div>
     </div>
 
     <footer>
@@ -549,20 +578,40 @@ HTML_TEMPLATE = """
         const form = document.getElementById('ai-form');
         const overlay = document.getElementById('scan-overlay');
         const resultArea = document.getElementById('result-area');
+        const term = document.getElementById('terminal-text');
+        const status = document.getElementById('status-text');
         let chart = null;
+
+        const terminalLines = [
+            "> INITIALIZING SCAN...",
+            "> PARSING LINGUISTIC VECTORS...",
+            "> ANALYZING BEHAVIORAL PATTERNS...",
+            "> CROSS-REFERENCING SCAM DATABASES...",
+            "> CALCULATING PROBABILITY...",
+            "> DECRYPTING METADATA..."
+        ];
+
+        async function typeTerminal() {
+            term.innerHTML = "";
+            for (let line of terminalLines) {
+                term.innerHTML += line + "<br>";
+                await new Promise(r => setTimeout(r, 400));
+            }
+        }
 
         form.onsubmit = async (e) => {
             e.preventDefault();
             
             overlay.style.display = 'flex';
             resultArea.style.display = 'none';
+            typeTerminal();
 
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
 
             try {
-                // Simulate some delay for the "premium" scanning feel
-                await new Promise(r => setTimeout(r, 2500));
+                // Delay for the scan effect
+                await new Promise(r => setTimeout(r, 2600));
                 
                 const response = await fetch('/api/predict', {
                     method: 'POST',
