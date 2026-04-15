@@ -104,20 +104,7 @@ After downloading:
 | Precision | 0.87  |
 | Recall    | 0.89  |
 
----
 
-## 🙋 Team Members
-
-- **Suryansh Mishra** — *Lead Developer & Data Scientist*
-
----
-
-## 🔗 Other Links
-
-- 🔹 Hosted App: [https://spothescamai.streamlit.app](https://spothescamai.streamlit.app)
-- 🔹 Demo Video: [https://www.youtube.com/your-video-link](https://www.youtube.com/watch?v=kdChsikXbNA)
-
----
 
 ## 📂 Directory Structure
 
