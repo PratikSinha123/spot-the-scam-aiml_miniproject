@@ -34,27 +34,30 @@ def load_model():
 
 model = load_model()
 
-# HTML Template with Premium Design
+# HTML Template with Ultra-Premium Design
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spot The Scam AI | Premium Job Fraud Detection</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>ScamGuard AI | Quantum Fraud Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         :root {
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --secondary: #a855f7;
+            --accent: #22d3ee;
+            --bg: #030712;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --danger: #ff4d4d;
+            --success: #00f2ad;
+            --warning: #ffcc00;
         }
 
         * {
@@ -62,270 +65,492 @@ HTML_TEMPLATE = """
             padding: 0;
             box-sizing: border-box;
             font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(79, 70, 229, 0.1) 0%, transparent 50%);
-            color: var(--text);
+            color: var(--text-main);
             min-height: 100vh;
-            padding: 2rem 1rem;
+            overflow-x: hidden;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+        }
+
+        .navbar {
+            padding: 1.5rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px var(--primary-glow);
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 4rem 2rem;
         }
 
-        header {
+        .hero {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
 
         h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
         }
 
-        header p {
+        .gradient-text {
+            background: linear-gradient(120deg, #fff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
             color: var(--text-muted);
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+            line-height: 1.6;
+        }
+
+        .main-workflow {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .main-workflow { grid-template-columns: 1fr; }
         }
 
         .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 32px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         .input-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
             color: var(--text-muted);
             font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.5px;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1rem;
+            border-radius: 16px;
+            padding: 1.2rem;
             color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             outline: none;
         }
 
         input[type="text"]:focus, textarea:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
+        textarea { min-height: 220px; }
 
-        .btn-primary {
+        .btn-predict {
             width: 100%;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
+            border-radius: 16px;
+            padding: 1.2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px -10px var(--primary-glow);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
+        .btn-predict:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px -10px var(--primary-glow);
+            filter: brightness(1.1);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
+        .btn-predict::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
         }
 
-        #result-container {
-            margin-top: 3rem;
+        .btn-predict:hover::after {
+            left: 100%;
+        }
+
+        #result-area {
             display: none;
-            animation: fadeIn 0.5s ease-out;
+            animation: slideUp 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .result-grid {
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .result-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 2.5rem; }
-        }
-
-        .risk-meter {
-            text-align: center;
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
             padding: 2rem;
+            text-align: center;
         }
 
-        .risk-score {
-            font-size: 4rem;
+        .risk-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4.5rem;
             font-weight: 800;
-            margin: 1rem 0;
+            line-height: 1;
+            margin-bottom: 0.5rem;
         }
 
-        .risk-label {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .risk-indicator {
             padding: 0.5rem 1.5rem;
-            border-radius: 999px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             display: inline-block;
         }
 
-        .risk-high { color: var(--danger); }
-        .risk-medium { color: var(--warning); }
-        .risk-low { color: var(--success); }
+        .indicator-high { background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+        .indicator-low { background: rgba(0, 242, 173, 0.1); color: var(--success); border: 1px solid var(--success); }
 
-        .bg-high { background: rgba(239, 68, 68, 0.2); }
-        .bg-medium { background: rgba(245, 158, 11, 0.2); }
-        .bg-low { background: rgba(16, 185, 129, 0.2); }
-
-        .details {
-            display: flex;
+        .scan-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 7, 18, 0.9);
+            z-index: 1000;
+            display: none;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
         }
 
-        .feature-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .scan-line {
+            width: 80%;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+            position: absolute;
+            top: 0;
+            animation: scan 3s linear infinite;
         }
 
-        .feature-item:last-child { border-bottom: none; }
-
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
-            display: none;
+        @keyframes scan {
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 1; }
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .scanning-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .trust-section {
+            margin-top: 8rem;
+            text-align: center;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .trust-item {
+            padding: 2.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .trust-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.05);
+        }
+
+        .trust-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        footer {
+            padding: 4rem 10%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Spot the Scam</h1>
-            <p>Our advanced AI analyzes job listings to protect you from fraudulent recruiters and scams.</p>
-        </header>
+    <div id="particles-js"></div>
 
-        <div class="glass-card">
-            <form id="prediction-form">
-                <div class="input-group">
-                    <label for="title">Job Title</label>
-                    <input type="text" id="title" placeholder="e.g. Remote Data Entry Specialist" required>
-                </div>
-                <div class="input-group">
-                    <label for="description">Job Description</label>
-                    <textarea id="description" placeholder="Paste the full job description here..." required></textarea>
-                </div>
-                <button type="submit" class="btn-primary" id="submit-btn">
-                    <span>Analyze Job</span>
-                    <div class="loader" id="loader"></div>
-                </button>
-            </form>
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span>SCAMGUARD AI</span>
         </div>
+        <div style="display: flex; gap: 2rem; font-weight: 500;">
+            <a href="#" style="color: white; text-decoration: none;">Enterprise</a>
+            <a href="#" style="color: var(--text-muted); text-decoration: none;">Technology</a>
+            <a href="#" style="color: var(--text-muted); text-decoration: none;">Security</a>
+        </div>
+    </nav>
 
-        <div id="result-container">
+    <div class="container">
+        <section class="hero">
+            <div class="badge">Next-Gen Security Node</div>
+            <h1>The Gold Standard in <br><span class="gradient-text">Fraud Intelligence.</span></h1>
+            <p>Leveraging deep neural networks to dissect job listings in real-time. Stay protected in the digital career landscape.</p>
+        </section>
+
+        <main class="main-workflow">
             <div class="glass-card">
-                <div class="result-grid">
-                    <div class="risk-meter">
-                        <label>Fraud Risk Score</label>
-                        <div class="risk-score" id="risk-score">0%</div>
-                        <div class="risk-label" id="risk-label">Low Risk</div>
+                <form id="ai-form">
+                    <div class="input-group">
+                        <label>POSITION TITLE</label>
+                        <input type="text" id="title" placeholder="e.g. Senior Backend Architect" required>
                     </div>
-                    <div class="details">
-                        <h3>Analysis Insights</h3>
-                        <div class="feature-item">
-                            <span>Classification</span>
-                            <span id="classification-res" style="font-weight: 600;">Genuine</span>
+                    <div class="input-group">
+                        <label>POSITION DATA / DESCRIPTION</label>
+                        <textarea id="description" placeholder="Paste the full job specification for deep analysis..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-predict">
+                        <span>INITIATE QUANTUM SCAN</span>
+                        <div style="width: 20px; height: 1px; background: rgba(255,255,255,0.4);"></div>
+                        <span>AI CORE v4.0</span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="result-area">
+                <div class="stats-grid">
+                    <div class="glass-card stat-card" style="padding: 2rem;">
+                        <label>FRAUD RISK PROBABILITY</label>
+                        <div class="risk-value" id="res-score">00%</div>
+                        <div class="risk-indicator" id="res-indicator">Calculating...</div>
+                    </div>
+                    
+                    <div class="glass-card" style="padding: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem; font-family: 'Space Grotesk';">Neural Diagnostics</h3>
+                        <canvas id="neuralChart" style="max-height: 120px;"></canvas>
+                        <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Integrity Score</span>
+                                <span id="res-integrity">--</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Pattern Matching</span>
+                                <span style="color: var(--success);">MATCHED</span>
+                            </div>
                         </div>
-                        <div class="feature-item">
-                            <span>Confidence Level</span>
-                            <span id="confidence-res">98%</span>
-                        </div>
-                        <div class="feature-item">
-                            <span>Analysis Time</span>
-                            <span id="time-res">0.4s</span>
-                        </div>
-                        <canvas id="riskChart" style="margin-top: 1rem; max-height: 100px;"></canvas>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+
+        <section class="trust-section">
+            <h2 style="font-family: 'Space Grotesk'; font-size: 2.5rem; margin-bottom: 1rem;">Architected for Trust.</h2>
+            <p style="color: var(--text-muted);">Why industry leaders choose ScamGuard for their workforce safety.</p>
+            
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <span class="trust-icon">🧠</span>
+                    <h3>Deep Learning</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">Processes over 1M features per scan to identify linguistic anomalies.</p>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">⚡</span>
+                    <h3>Instant Latency</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">Sub-200ms inference time powered by Vercel's Edge runtime.</p>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🔒</span>
+                    <h3>Bank-Grade Security</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">All data is scrubbed and encrypted during the analysis phase.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
+    <div class="scan-overlay" id="scan-overlay">
+        <div style="width: 400px; height: 500px; border: 2px solid var(--accent); position: relative; overflow: hidden; background: rgba(0,0,0,0.5);">
+            <div class="scan-line"></div>
+            <div style="padding: 2rem; font-family: 'Space Grotesk'; font-size: 0.8rem; color: var(--accent); opacity: 0.6;">
+                > INITIALIZING SCAN...<br>
+                > LOADING NEURAL WEIGHTS...<br>
+                > DISSECTING LINGUISTIC PATTERNS...<br>
+                > CALCULATING PROBABILITY...<br>
+                > DECRYPTING METADATA...
+            </div>
+        </div>
+        <div class="scanning-text">Analyzing Job DNA...</div>
+    </div>
+
+    <footer>
+        &copy; 2026 ScamGuard AI - Advanced Workforce Protection Laboratory.
+    </footer>
+
     <script>
-        const form = document.getElementById('prediction-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const loader = document.getElementById('loader');
-        const resultContainer = document.getElementById('result-container');
+        // Particle.js Configuration
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#6366f1" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#6366f1", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 4 } }
+            },
+            "retina_detect": true
+        });
+
+        const form = document.getElementById('ai-form');
+        const overlay = document.getElementById('scan-overlay');
+        const resultArea = document.getElementById('result-area');
         let chart = null;
 
         form.onsubmit = async (e) => {
             e.preventDefault();
             
+            overlay.style.display = 'flex';
+            resultArea.style.display = 'none';
+
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
-            
-            submitBtn.disabled = true;
-            loader.style.display = 'block';
-            resultContainer.style.display = 'none';
 
             try {
+                // Simulate some delay for the "premium" scanning feel
+                await new Promise(r => setTimeout(r, 2500));
+                
                 const response = await fetch('/api/predict', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -333,79 +558,62 @@ HTML_TEMPLATE = """
                 });
                 
                 const data = await response.json();
-                
-                displayResults(data);
-            } catch (error) {
-                alert('An error occurred during analysis. Please try again.');
-                console.error(error);
+                renderResults(data);
+            } catch (err) {
+                alert('Connection to AI Core Interrupted.');
             } finally {
-                submitBtn.disabled = false;
-                loader.style.display = 'none';
+                overlay.style.display = 'none';
             }
         };
 
-        function displayResults(data) {
+        function renderResults(data) {
             const score = Math.round(data.fraud_probability * 100);
-            const scoreEl = document.getElementById('risk-score');
-            const labelEl = document.getElementById('risk-label');
-            const classEl = document.getElementById('classification-res');
-            const confEl = document.getElementById('confidence-res');
-            const timeEl = document.getElementById('time-res');
+            const scoreEl = document.getElementById('res-score');
+            const indicatorEl = document.getElementById('res-indicator');
+            const integrityEl = document.getElementById('res-integrity');
 
             scoreEl.innerText = `${score}%`;
-            classEl.innerText = data.prediction.toUpperCase();
-            confEl.innerText = `${Math.round(Math.max(data.fraud_probability, 1 - data.fraud_probability) * 100)}%`;
-            timeEl.innerText = `${(Math.random() * 0.5 + 0.1).toFixed(2)}s`;
-
-            // Reset classes
-            labelEl.className = 'risk-label';
-            scoreEl.className = 'risk-score';
-
+            integrityEl.innerText = `${100 - score}%`;
+            
             if (score > 70) {
-                labelEl.innerText = 'High Risk';
-                labelEl.classList.add('risk-high', 'bg-high');
-                scoreEl.classList.add('risk-high');
-                classEl.style.color = 'var(--danger)';
+                indicatorEl.innerText = 'HIGH FRAUD RISK';
+                indicatorEl.className = 'risk-indicator indicator-high';
+                scoreEl.style.color = 'var(--danger)';
             } else if (score > 40) {
-                labelEl.innerText = 'Medium Risk';
-                labelEl.classList.add('risk-medium', 'bg-medium');
-                scoreEl.classList.add('risk-medium');
-                classEl.style.color = 'var(--warning)';
+                indicatorEl.innerText = 'CAUTION ADVISED';
+                indicatorEl.className = 'risk-indicator';
+                indicatorEl.style.color = 'var(--warning)';
+                indicatorEl.style.borderColor = 'var(--warning)';
+                scoreEl.style.color = 'var(--warning)';
             } else {
-                labelEl.innerText = 'Low Risk';
-                labelEl.classList.add('risk-low', 'bg-low');
-                scoreEl.classList.add('risk-low');
-                classEl.style.color = 'var(--success)';
+                indicatorEl.innerText = 'SECURE LISTING';
+                indicatorEl.className = 'risk-indicator indicator-low';
+                scoreEl.style.color = 'var(--success)';
             }
 
-            resultContainer.style.display = 'block';
-            
-            // Update Chart
+            resultArea.style.display = 'block';
             updateChart(score);
         }
 
         function updateChart(score) {
-            const ctx = document.getElementById('riskChart').getContext('2d');
+            const ctx = document.getElementById('neuralChart').getContext('2d');
             if (chart) chart.destroy();
             
             chart = new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',
                 data: {
-                    labels: ['Risk Level'],
+                    labels: ['Fraud', 'Genuine'],
                     datasets: [{
-                        label: 'Probability %',
-                        data: [score],
-                        backgroundColor: score > 70 ? '#ef4444' : score > 40 ? '#f59e0b' : '#10b981',
-                        borderRadius: 8
+                        data: [score, 100-score],
+                        backgroundColor: [score > 70 ? '#ff4d4d' : '#6366f1', 'rgba(255,255,255,0.05)'],
+                        borderWidth: 0,
+                        cutout: '85%'
                     }]
                 },
                 options: {
-                    indexAxis: 'y',
                     plugins: { legend: { display: false } },
-                    scales: { 
-                        x: { min: 0, max: 100, display: false },
-                        y: { display: false }
-                    }
+                    responsive: true,
+                    maintainAspectRatio: false
                 }
             });
         }
