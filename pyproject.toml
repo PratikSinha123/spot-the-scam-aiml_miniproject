@@ -1,0 +1,16 @@
+[project]
+name = "spot-the-scam"
+version = "0.1.0"
+description = "AI Job Fraud Detection"
+dependencies = [
+    "flask",
+    "gunicorn",
+    "pandas",
+    "scikit-learn",
+    "joblib",
+    "numpy",
+    "requests"
+]
+
+[tool.setuptools]
+py-modules = ["api.index"]
