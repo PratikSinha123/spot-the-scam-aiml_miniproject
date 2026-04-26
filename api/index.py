@@ -10,58 +10,16 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 app = Flask(__name__)
 
-# --- Custom Model Classes (Required for unpickling) ---
-class TextCombiner(BaseEstimator, TransformerMixin):
-    def fit(self, X, y=None): return self
-    def transform(self, X):
-        return (X["title"].astype(str).fillna("") + " " + X["description"].astype(str).fillna("")).values
+import sys
+import os
 
-class AdvancedLinguisticFeatures(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.scam_keywords = [
-            "registration fee", "whatsapp", "telegram", "hangouts", "instant payment",
-            "macbook", "equipment purchase", "quick money", "work from home", 
-            "fee required", "signal app", "zelle", "cashapp", "venmo", "salary", 
-            "urgent hiring", "limited slots", "no experience required"
-        ]
+# Add the project root to sys.path so model_components can be imported by Vercel
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+try:
+    import model_components
+except ImportError:
+    print("WARNING: Could not import model_components.")
 
-    def fit(self, X, y=None): return self
-
-    def transform(self, X):
-        titles = X["title"].astype(str).str.lower()
-        descs = X["description"].astype(str).str.lower()
-        combined = titles + " " + descs
-        
-        features = []
-        for text in combined:
-            # 1. Scam Keyword Count
-            kw_count = sum(1 for kw in self.scam_keywords if kw in text)
-            
-            # 2. Capitalization Ratio
-            caps_count = sum(1 for c in text if c.isupper())
-            caps_ratio = caps_count / (len(text) + 1)
-            
-            # 3. URL Presence
-            has_url = 1 if re.search(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text) else 0
-            
-            # 4. Email Presence
-            has_email = 1 if re.search(r'[\w\.-]+@[\w\.-]+', text) else 0
-            
-            # 5. Currency/Money Signals
-            has_money = 1 if re.search(r'(\d+|\$|₹|rs|usd)', text) else 0
-            
-            # 6. Text Length Log (Genuine jobs are often longer)
-            log_len = np.log1p(len(text))
-            
-            features.append([kw_count, caps_ratio, has_url, has_email, has_money, log_len])
-            
-        return np.array(features)
-
-class DeepHeuristicFlags(AdvancedLinguisticFeatures): pass
-class FraudKeywordFeatures(AdvancedLinguisticFeatures): pass
-
-# Legacy support for old model pickle names (if needed)
-class FraudKeywordFeatures(DeepHeuristicFlags): pass
 
 # --- Model Loading ---
 # Search for model in multiple potential paths (Vercel vs Local)

@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{model_components.py,models/model.pkl}"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
