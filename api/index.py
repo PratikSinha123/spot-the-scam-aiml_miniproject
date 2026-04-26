@@ -14,31 +14,54 @@ app = Flask(__name__)
 class TextCombiner(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None): return self
     def transform(self, X):
-        return (X["title"].fillna("") + " " + X["description"].fillna("")).values
+        return (X["title"].astype(str).fillna("") + " " + X["description"].astype(str).fillna("")).values
 
-class FraudKeywordFeatures(BaseEstimator, TransformerMixin):
+class AdvancedLinguisticFeatures(BaseEstimator, TransformerMixin):
     def __init__(self):
-        self.keywords = ["registration fee", "fee required", "pay to start", "refund later", "whatsapp", "contact immediately", "urgent hiring", "limited slots", "no experience required", "work from home", "instant payment", "quick money", "earn money fast", "high salary", "simple tasks", "data entry", "form filling"]
+        self.scam_keywords = [
+            "registration fee", "whatsapp", "telegram", "hangouts", "instant payment",
+            "macbook", "equipment purchase", "quick money", "work from home", 
+            "fee required", "signal app", "zelle", "cashapp", "venmo", "salary", 
+            "urgent hiring", "limited slots", "no experience required"
+        ]
+
     def fit(self, X, y=None): return self
+
     def transform(self, X):
-        texts = (X["title"].fillna("") + " " + X["description"].fillna("")).str.lower()
+        titles = X["title"].astype(str).str.lower()
+        descs = X["description"].astype(str).str.lower()
+        combined = titles + " " + descs
+        
         features = []
-        for text in texts:
-            row = []
-            keyword_count = sum(1 for kw in self.keywords if kw in text)
-            row.append(keyword_count)
-            row.append(int("registration fee" in text))
-            row.append(int("refund later" in text))
-            row.append(int("whatsapp" in text))
-            row.append(int("urgent" in text or "hurry" in text))
-            row.append(int("no experience" in text))
-            row.append(int("work from home" in text))
-            row.append(int("high salary" in text))
-            row.append(int("limited slots" in text))
-            money_pattern = r"(₹|\$|rs\.?|rupees?)\s?\d+"
-            row.append(len(re.findall(money_pattern, text)))
-            features.append(row)
-        return np.array(features, dtype=float)
+        for text in combined:
+            # 1. Scam Keyword Count
+            kw_count = sum(1 for kw in self.scam_keywords if kw in text)
+            
+            # 2. Capitalization Ratio
+            caps_count = sum(1 for c in text if c.isupper())
+            caps_ratio = caps_count / (len(text) + 1)
+            
+            # 3. URL Presence
+            has_url = 1 if re.search(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text) else 0
+            
+            # 4. Email Presence
+            has_email = 1 if re.search(r'[\w\.-]+@[\w\.-]+', text) else 0
+            
+            # 5. Currency/Money Signals
+            has_money = 1 if re.search(r'(\d+|\$|₹|rs|usd)', text) else 0
+            
+            # 6. Text Length Log (Genuine jobs are often longer)
+            log_len = np.log1p(len(text))
+            
+            features.append([kw_count, caps_ratio, has_url, has_email, has_money, log_len])
+            
+        return np.array(features)
+
+class DeepHeuristicFlags(AdvancedLinguisticFeatures): pass
+class FraudKeywordFeatures(AdvancedLinguisticFeatures): pass
+
+# Legacy support for old model pickle names (if needed)
+class FraudKeywordFeatures(DeepHeuristicFlags): pass
 
 # --- Model Loading ---
 # Search for model in multiple potential paths (Vercel vs Local)
@@ -440,6 +463,61 @@ HTML_TEMPLATE = """
             text-align: center;
             color: var(--text-muted);
             font-size: 0.9rem;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            #particles-js, .navbar, .hero, .glass-card:has(#ai-form), .trust-section, footer, button, .badge {
+                display: none !important;
+            }
+            .main-workflow {
+                display: block !important;
+            }
+            #result-area {
+                display: block !important;
+                width: 100% !important;
+            }
+            .glass-card {
+                background: white !important;
+                border: 2px solid #e5e7eb !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                color: black !important;
+                padding: 2rem !important;
+                margin-bottom: 2rem !important;
+            }
+            .glass-card::before {
+                display: none !important;
+            }
+            .glass-card * {
+                color: black !important;
+                border-color: #e5e7eb !important;
+            }
+            .risk-value {
+                color: black !important;
+            }
+            .risk-indicator.indicator-high {
+                background: #fee2e2 !important;
+                color: #dc2626 !important;
+                border-color: #dc2626 !important;
+            }
+            .risk-indicator.indicator-low {
+                background: #d1fae5 !important;
+                color: #059669 !important;
+                border-color: #059669 !important;
+            }
+            .risk-indicator {
+                background: #fef3c7 !important;
+                color: #d97706 !important;
+                border-color: #d97706 !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
         }
     </style>
 </head>
